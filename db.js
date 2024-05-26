@@ -8,14 +8,19 @@ const dbName = process.env.NODE_ENV === "test"
   ? process.env.DB_TEST_NAME
   : process.env.DB_NAME;
 
-const db = new Client({
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  host: process.env.DB_HOST || "localhost",
-  port: process.env.DB_PORT || 5432,
-  database: dbName
-})
+const dbClientData = process.env.DB_URL
+  ? { connectionString: process.env.DB_URL }
+  : {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    host: process.env.DB_HOST || "localhost",
+    port: process.env.DB_PORT || 5432,
+    database: dbName
+  }
+
+const db = new Client(dbClientData)
 
 db.connect();
 
 module.exports = db;
+
